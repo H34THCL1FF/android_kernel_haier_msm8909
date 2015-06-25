@@ -99,7 +99,7 @@ struct zbud_pool {
 	struct zbud_ops *ops;
 #ifdef CONFIG_ZPOOL
 	struct zpool *zpool;
-	const struct zpool_ops *zpool_ops;
+	struct zpool_ops *zpool_ops;
 #endif
 };
 
@@ -127,7 +127,10 @@ struct zbud_header {
 
 static int zbud_zpool_evict(struct zbud_pool *pool, unsigned long handle)
 {
-	return zpool_evict(pool, handle);
+	if (pool->zpool && pool->zpool_ops && pool->zpool_ops->evict)
+		return pool->zpool_ops->evict(pool->zpool, handle);
+	else
+		return -ENOENT;
 }
 
 static struct zbud_ops zbud_zpool_ops = {
@@ -135,9 +138,17 @@ static struct zbud_ops zbud_zpool_ops = {
 };
 
 static void *zbud_zpool_create(char *name, gfp_t gfp,
-			struct zpool_ops *zpool_ops)
+			       struct zpool_ops *zpool_ops,
+			       struct zpool *zpool)
 {
-	return zbud_create_pool(gfp, zpool_ops ? &zbud_zpool_ops : NULL);
+	struct zbud_pool *pool;
+
+	pool = zbud_create_pool(gfp, zpool_ops ? &zbud_zpool_ops : NULL);
+	if (pool) {
+		pool->zpool = zpool;
+		pool->zpool_ops = zpool_ops;
+	}
+	return pool;
 }
 
 static void zbud_zpool_destroy(void *pool)
