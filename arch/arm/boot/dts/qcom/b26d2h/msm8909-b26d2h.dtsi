@@ -304,13 +304,8 @@
 };
 
 &pm8909_chg {
-	qcom,vddmax-mv = <4200>;
-	qcom,vddsafe-mv = <4200>;
-	qcom,vinmin-mv = <4308>;
-	qcom,batt-hot-percentage = <25>;
-	qcom,batt-cold-percentage = <80>;
-	qcom,tchg-mins = <232>;
-	status = "okay";
+	status = "ok";
+	qcom,use-external-charger;
 };
 
 / {
@@ -324,6 +319,24 @@
 
 &pm8909_bms {
 	status = "okay";
+	qcom,v-cutoff-uv = <3400000>;
+	qcom,max-voltage-uv = <4350000>;
+	qcom,r-conn-mohm = <15>;
+	qcom,shutdown-soc-valid-limit = <100>;
+	qcom,low-soc-calculate-soc-threshold = <15>;
+	qcom,low-voltage-calculate-soc-ms = <1000>;
+	qcom,low-soc-calculate-soc-ms = <5000>;
+	qcom,calculate-soc-ms = <20000>;
+	qcom,volatge-soc-timeout-ms = <60000>;
+	qcom,low-voltage-threshold = <3450000>;
+	qcom,s3-ocv-tolerence-uv = <1200>;
+	qcom,s2-fifo-length = <5>;
+	qcom,low-soc-fifo-length = <2>;
+	qcom,bms-vadc = <&pm8909_vadc>;
+	qcom,bms-adc_tm = <&pm8909_adc_tm>;
+	qcom,pmic-revid = <&pm8909_revid>;
+	qcom,force-s3-on-suspend;
+	qcom,force-s2-in-charging;
 	qcom,report-charger-eoc;
 	qcom,resume-soc = <97>;
 	qcom,use-reported-soc;
@@ -446,30 +459,30 @@
 	smb358-charger@57 {
 		compatible = "qcom,smb358-charger";
 		reg = <0x57>;
-		qcom,irq-gpio = <&msm_gpio 0x3a 0x0>;
+		qcom,irq-gpio = <&msm_gpio 58 0x0>;
 		interrupt-parent = <&msm_gpio>;
-		interrupts = <0x3a 0x2>;
+		interrupts = <58 0x2>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&smb_int_default>;
-		qcom,float-voltage-mv = <0x10fe>;
+		qcom,float-voltage-mv = <4350>;
 		qcom,chg-inhibit-disabled;
-		qcom,fastchg-current-max-ma = <0x5dc>;
+		qcom,fastchg-current-max-ma = <1500>;
 		qcom,bms-psy-name = "bms";
-		qcom,chg-vadc = <0xb3>;
-		qcom,chg-adc_tm = <0xb0>;
-		qcom,iterm-ma = <0x64>;
-		qcom,recharge-mv = <0x64>;
+		qcom,chg-vadc = <179>;
+		qcom,chg-adc_tm = <176>;
+		qcom,iterm-ma = <100>;
+		qcom,recharge-mv = <100>;
 		regulator-name = "smb358_otg_vreg";
 		qcom,using-pmic-therm;
 		qcom,bms-controlled-charging;
-		qcom,bat-present-decidegc = <0xc8>;
-		qcom,hot-bat-decidegc = <0x226>;
-		qcom,warm-bat-decidegc = <0x1c2>;
-		qcom,cool-bat-decidegc = <0x64>;
-		qcom,cold-bat-decidegc = <0x0>;
-		qcom,warm-bat-ma = <0x1f4>;
-		qcom,cool-bat-ma = <0x1f4>;
-		qcom,warm-bat-mv = <0x1068>;
-		qcom,cool-bat-mv = <0x1068>;
+		qcom,bat-present-decidegc = <200>;
+		qcom,hot-bat-decidegc = <550>;
+		qcom,warm-bat-decidegc = <450>;
+		qcom,cool-bat-decidegc = <100>;
+		qcom,cold-bat-decidegc = <0>;
+		qcom,warm-bat-ma = <500>;
+		qcom,cool-bat-ma = <500>;
+		qcom,warm-bat-mv = <4200>;
+		qcom,cool-bat-mv = <4200>;
 	};
 };
