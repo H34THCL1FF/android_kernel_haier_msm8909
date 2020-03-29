@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: rama982/dokar:latest
+    steps:
+      - checkout
+      - run: wget https://gitlab.com/dodyirawan85/scripts/raw/master/a16c3h-kernel-on-docker.sh
+      - run: bash a16c3h-kernel-on-docker.sh
